@@ -1,0 +1,13 @@
+---
+
+# Overload variables using the dict named "crontab"
+crontab:
+  global:
+    - "@reboot root logger 'system restarted'"
+  # users:
+    # - name: "root"
+      # entries:
+        # - "@reboot root /root/restart_elk_services.sh"
+    # - name: "vagrant"
+      # entries:
+        # - "@reboot root /root/restart_elk_services.sh"

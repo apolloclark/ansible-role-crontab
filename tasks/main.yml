@@ -1,0 +1,33 @@
+---
+
+# https://docs.ansible.com/ansible/2.5/modules/lineinfile_module.html
+- name: Configure global crontab
+  lineinfile:
+    path: /etc/crontab
+    line: "{{ item }}"
+  loop: "{{ crontab.global }}"
+
+# https://docs.ansible.com/ansible/2.6/modules/file_module.html#file-module
+- name: Create user crontab files
+  file:
+    path: "/var/spool/cron/crontabs/{{ item.0.name }}"
+    owner: "{{ item.0.name }}"
+    group: "crontab"
+    mode: 0600
+    state: touch
+  with_subelements:
+    - "{{ crontab.users }}"
+    - entries
+  when:
+    - "'users' in crontab"
+
+# https://docs.ansible.com/ansible/2.5/modules/lineinfile_module.html
+- name: Configure user crontabs
+  lineinfile:
+    path: "/var/spool/cron/crontabs/{{ item.0.name }}"
+    line: "{{ item.1 }}"
+  with_subelements:
+    - "{{ crontab.users }}"
+    - entries
+  when:
+    - "'users' in crontab"
